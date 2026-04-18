@@ -2,7 +2,7 @@ import axios from 'axios';
 import useAuthStore from '../store/authStore';
 
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: import.meta.env.PROD ? '/_/backend/api' : 'http://localhost:5000/api',
 });
 
 // Request interceptor for adding the bearer token
