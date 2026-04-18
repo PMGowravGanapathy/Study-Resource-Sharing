@@ -7,9 +7,17 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Ensure uploads directory exists
-const uploadDir = path.join(__dirname, '../uploads');
+const isVercel = process.env.NODE_ENV === 'production';
+const uploadDir = isVercel 
+  ? path.join('/tmp', 'uploads') 
+  : path.join(__dirname, '../uploads');
+
 if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
+  try {
+    fs.mkdirSync(uploadDir, { recursive: true });
+  } catch (error) {
+    console.error('Could not create upload directory:', error);
+  }
 }
 
 const storage = multer.diskStorage({
