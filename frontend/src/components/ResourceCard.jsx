@@ -83,7 +83,7 @@ export default function ResourceCard({ resource, onLikeUpdate }) {
             </a>
           ) : (
             <a 
-              href={`http://localhost:5000${resource.url}`} 
+              href={`${import.meta.env.PROD ? '/_/backend' : 'http://localhost:5000'}${resource.url}`} 
               target="_blank"
               download
               className="btn-primary w-full flex items-center justify-center space-x-2 text-sm"
