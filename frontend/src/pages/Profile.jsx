@@ -35,6 +35,10 @@ export default function Profile() {
     setResources(resources.map(r => r._id === id ? { ...r, likes: newLikes } : r));
   };
 
+  const handleDelete = (id) => {
+    setResources(resources.filter(r => r._id !== id));
+  };
+
   return (
     <div className="space-y-8">
       {/* Profile Header */}
@@ -82,6 +86,7 @@ export default function Profile() {
                 key={resource._id} 
                 resource={resource} 
                 onLikeUpdate={handleLikeUpdate} 
+                onDelete={handleDelete}
               />
             ))}
           </div>

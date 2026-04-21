@@ -51,6 +51,10 @@ export default function Home() {
     fetchResources();
   }, [debouncedSearch, subjectFilter]);
 
+  const handleDelete = (id) => {
+    setResources(resources.filter(r => r._id !== id));
+  };
+
   return (
     <div className="space-y-8">
       {/* Header section */}
@@ -101,7 +105,7 @@ export default function Home() {
       ) : resources.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {resources.map((resource) => (
-            <ResourceCard key={resource._id} resource={resource} />
+            <ResourceCard key={resource._id} resource={resource} onDelete={handleDelete} />
           ))}
         </div>
       ) : (

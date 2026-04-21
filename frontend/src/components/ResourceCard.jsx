@@ -1,10 +1,10 @@
-import { FileText, Link as LinkIcon, Download, ExternalLink, ThumbsUp, Calendar } from 'lucide-react';
+import { FileText, Link as LinkIcon, Download, ExternalLink, ThumbsUp, Calendar, Trash2 } from 'lucide-react';
 import useAuthStore from '../store/authStore';
 import api from '../services/api';
 import toast from 'react-hot-toast';
 import { useState } from 'react';
 
-export default function ResourceCard({ resource, onLikeUpdate }) {
+export default function ResourceCard({ resource, onLikeUpdate, onDelete }) {
   const { user, isAuthenticated } = useAuthStore();
   const [isLiking, setIsLiking] = useState(false);
   const [likes, setLikes] = useState(resource.likes || []);
@@ -29,6 +29,19 @@ export default function ResourceCard({ resource, onLikeUpdate }) {
 
   const isLiked = user ? likes.includes(user._id) : false;
   const isLink = resource.type === 'Link';
+  const canDelete = user && (user._id === resource.uploader?._id || user.role === 'admin');
+
+  const handleDelete = async () => {
+    if (window.confirm('Are you sure you want to delete this resource?')) {
+      try {
+        await api.delete(`/resources/${resource._id}`);
+        toast.success('Resource deleted successfully');
+        if (onDelete) onDelete(resource._id);
+      } catch (error) {
+        toast.error(error.response?.data?.message || 'Failed to delete resource');
+      }
+    }
+  };
 
   return (
     <div className="card flex flex-col h-full group">
@@ -36,9 +49,20 @@ export default function ResourceCard({ resource, onLikeUpdate }) {
         <div className="bg-primary-900/30 text-primary-400 text-xs font-semibold px-2.5 py-1 rounded-full">
           {resource.subject}
         </div>
-        <div className="flex items-center space-x-1 text-slate-400">
-          {isLink ? <LinkIcon className="h-4 w-4" /> : <FileText className="h-4 w-4" />}
-          <span className="text-xs uppercase font-medium">{resource.type}</span>
+        <div className="flex items-center space-x-2 text-slate-400">
+          <div className="flex items-center space-x-1">
+            {isLink ? <LinkIcon className="h-4 w-4" /> : <FileText className="h-4 w-4" />}
+            <span className="text-xs uppercase font-medium">{resource.type}</span>
+          </div>
+          {canDelete && (
+            <button 
+              onClick={handleDelete}
+              title="Delete Resource"
+              className="ml-2 text-red-500 hover:text-red-400 hover:bg-red-500/10 p-1.5 rounded-md transition-colors"
+            >
+              <Trash2 className="h-4 w-4" />
+            </button>
+          )}
         </div>
       </div>
 
