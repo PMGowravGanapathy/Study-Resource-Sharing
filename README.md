@@ -1,4 +1,5 @@
 # Study Resource Sharing Platform
+🔗 Live Demo: https://study-resource-sharing-three.vercel.app/
 
 A full-stack web application built for students and educators to share, discover, and download study materials like PDFs, notes, and external links. Features a modern dark-themed UI built with React and Tailwind CSS, and a robust Node.js/Express backend connected to MongoDB.
 
